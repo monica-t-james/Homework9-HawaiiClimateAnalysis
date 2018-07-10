@@ -33,18 +33,18 @@ session = Session(engine)
 app = Flask(__name__)
 
 # last 12 months variable
-last_twelve_months = dt.date.today() - relativedelta(months=12)
+last_twelve_months = '2016-08-23'
 
 @app.route("/")
 def welcome():
     return (
-        f"Welcome to the Hawaii weather API!<br/>"
-        f"Usage:<br/>"
-        f"/api/v1.0/precipitation<br/>"
-        f"/api/v1.0/stations<br/>"
-        f"/api/v1.0/tobs<br/>"
-        f"/api/v1.0/date<br/>"
-        f"/api/v1.0/start_date/end_date<br/>"
+        f"<p>Welcome to the Hawaii weather API!</p>"
+        f"<p>Usage:</p>"
+        f"/api/v1.0/precipitation<br/>Returns a JSON list of percipitation data for the dates between 8/23/16 and 8/23/17<br/><br/>"
+        f"/api/v1.0/stations<br/>Returns a JSON list of the weather stations<br/><br/>"
+        f"/api/v1.0/tobs<br/>Returns a JSON list of the Temperature Observations (tobs) for each station for the dates between 8/23/16 and 8/23/17<br/><br/>"
+        f"/api/v1.0/date<br/>Returns a JSON list of the minimum temperature, the average temperature, and the max temperature for the dates between the given start date and 8/23/17<br/><br/>."
+        f"/api/v1.0/start_date/end_date<br/>Returns a JSON list of the minimum temperature, the average temperature, and the max temperature for the dates between the given start date and end date<br/><br/>."
     )
 
 # /api/v1.0/precipitation
@@ -79,7 +79,7 @@ def tobs():
 # When given the start only, calculate TMIN, TAVG, and TMAX for all dates greater than and equal to the start date.
 @app.route("/api/v1.0/<date>")
 def startDateOnly(date):
-    day_temp_results = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).filter(Measurement.date == date).all()
+    day_temp_results = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).filter(Measurement.date >= date).all()
     return jsonify(day_temp_results)
 
 
